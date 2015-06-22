@@ -5,7 +5,6 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 
 import java.io.BufferedReader;
@@ -13,43 +12,56 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.OutputStreamWriter;
-import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class SerialHandler implements SerialPortEventListener
+public class SerialHandler extends Thread implements SerialPortEventListener
 {
-    private final Scanner keyIn = new Scanner(System.in);
-    File lockFile = new File("/var/lock/LCK..ttyPS1");
-    SerialPort serialPort;
-    private static final String PORT_NAMES[] =
-    {
-        "/dev/ttyPS1"
-    };
+
+    private final File lockFile = new File("/var/lock/LCK..ttyPS1");
+    private SerialPort serialPort;
+    private final String PORT_NAME = "/dev/ttyPS1";
     private BufferedReader input;
     private BufferedWriter output;
-    private static final int TIME_OUT = 200000;
-    private static final int DATA_RATE = 115200;
-    private ArrayList<Integer> offSensors = new ArrayList<>();
+    private final int TIME_OUT = 200000;
+    private final int DATA_RATE = 115200;
 
-    public void initialize()
+    public void run()
     {
-        // Remove stale lock file:
+        while (true)
+        {
+            try
+            {
+                this.initialize();
+                System.out.println("Started");
+                Thread.sleep(1000000);
+            }
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(SerialHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private void initialize()
+    {
+        // Removing stale lock file:
         lockFile.delete();
+
+        // Adding port "/dev/ttyPS1":
         System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyPS1");
+
+        // Checking if comm-port is valid and set port ID:
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
-
-        // First, Find an instance of serial port as set in PORT_NAMES:
         while (portEnum.hasMoreElements())
         {
             CommPortIdentifier currPortId = (CommPortIdentifier) portEnum
                     .nextElement();
-            for (String portName : PORT_NAMES)
+            if (currPortId.getName().equals(PORT_NAME))
             {
-                if (currPortId.getName().equals(portName))
-                {
-                    portId = currPortId;
-                    break;
-                }
+                portId = currPortId;
+                break;
             }
         }
         if (portId == null)
@@ -73,10 +85,11 @@ public class SerialHandler implements SerialPortEventListener
 
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
-                        int outputLine = 0x7C;
-                        output.write(outputLine);
-                        output.flush();
-                        System.out.println("Sent: " + outputLine);
+            System.out.println("Serial port open on " + PORT_NAME);
+            int outputLine = 0x7C;
+            output.write(outputLine);
+            output.flush();
+            System.out.println("Sent: " + outputLine);
         }
         catch (Exception e)
         {
@@ -100,18 +113,10 @@ public class SerialHandler implements SerialPortEventListener
             try
             {
                 String inputLine = null;
-                String outputLine = null;
                 if (input.ready())
                 {
                     inputLine = input.readLine();
                     System.out.println("Recieved: " + inputLine);
-                    if (inputLine.equals("HEJ"))
-                    {
-                        outputLine = "5";
-                        output.write(outputLine);
-                        output.flush();
-                        System.out.println("Sent: " + outputLine);
-                    }
                 }
 
             }
@@ -120,30 +125,5 @@ public class SerialHandler implements SerialPortEventListener
                 System.err.println(e.toString());
             }
         }
-    }
-
-    public static void main(String[] args) throws Exception
-    {
-        SerialHandler main = new SerialHandler();
-        main.initialize();
-        Thread t = new Thread()
-        {
-            public void run()
-            {
-				// the following line will keep this app alive for 1000 seconds,
-                // waiting for events to occur and responding to them (printing
-                // incoming messages to console).
-                try
-                {
-                    Thread.sleep(100000000);
-                }
-                catch (InterruptedException ie)
-                {
-                    System.err.println(".." + ie.getMessage());
-                }
-            }
-        };
-        t.start();
-        System.out.println("Started");
     }
 }
