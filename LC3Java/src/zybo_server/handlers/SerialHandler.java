@@ -38,7 +38,7 @@ public class SerialHandler extends Thread implements SerialPortEventListener
             }
             catch (InterruptedException ex)
             {
-                Logger.getLogger(SerialHandler.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
     }
