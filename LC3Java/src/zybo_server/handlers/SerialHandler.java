@@ -11,9 +11,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class SerialHandler implements SerialPortEventListener
+public class SerialHandler //implements SerialPortEventListener
 {
 
     private final File lockFile = new File("/var/lock/LCK..ttyPS1");
@@ -64,17 +65,13 @@ public class SerialHandler implements SerialPortEventListener
             output = new BufferedWriter(new OutputStreamWriter(
                     serialPort.getOutputStream()));
 
-            serialPort.addEventListener(this);
+            //serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
             System.out.println("Serial port open on " + PORT_NAME);
-            int outputLine = 0x7C;
-            output.write(outputLine);
-            output.flush();
-            System.out.println("Sent: " + outputLine);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            System.err.println(e.toString());
+            ex.printStackTrace();
         }
     }
 
@@ -82,29 +79,56 @@ public class SerialHandler implements SerialPortEventListener
     {
         if (serialPort != null)
         {
-            serialPort.removeEventListener();
+            //serialPort.removeEventListener();
             serialPort.close();
         }
     }
 
-    public synchronized void serialEvent(SerialPortEvent oEvent)
+    public synchronized String readLine() throws IOException
     {
-        if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE)
+        String inputLine = null;
+        while (true)
         {
-            try
+            if (input.ready())
             {
-                String inputLine = null;
-                if (input.ready())
+                inputLine = input.readLine();
+                if (!inputLine.equals(null))
                 {
-                    inputLine = input.readLine();
-                    System.out.println("Recieved: " + inputLine);
+                    return inputLine;
                 }
-
-            }
-            catch (Exception e)
-            {
-                System.err.println(e.toString());
             }
         }
     }
+
+    public synchronized void write(int outputByte)
+    {
+        try
+        {
+            output.write(outputByte);
+            output.flush();
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /*public synchronized void serialEvent(SerialPortEvent oEvent)
+     {
+     if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE)
+     {
+     try
+     {
+     if (input.ready())
+     {
+     inputLine = input.readLine();
+     System.out.println("Recieved: " + inputLine);
+     }
+     }
+     catch (Exception e)
+     {
+     System.err.println(e.toString());
+     }
+     }
+     }*/
 }

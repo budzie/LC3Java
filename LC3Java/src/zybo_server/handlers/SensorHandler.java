@@ -11,14 +11,16 @@ import zybo_server.types.SensorType;
 
 public class SensorHandler
 {
-
+    private SerialHandler serialHandler;
     private final ArrayList<SensorType> sensors;
 
     private SampleHandler sample;
 
-    public SensorHandler() throws FileNotFoundException, IOException
+    public SensorHandler(SerialHandler serialHandler) throws FileNotFoundException, IOException
     {
+        this.serialHandler = serialHandler;
         sensors = new ArrayList<SensorType>();
+        
         BufferedReader ind = new BufferedReader(new FileReader("Sensors.txt"));
 
         String linje = ind.readLine();
@@ -32,19 +34,20 @@ public class SensorHandler
             linje = ind.readLine();
         }
         ind.close();
+        
     }
 
     private void addSensor(String sensorName, int sensorRate, int sensorValue)
     {
         sensors.add(new SensorType(sensorName, sensorRate, sensorValue));
-        System.out.println("Added " + sensorName + " with update every " + sensorRate + " seconds.");
+        System.out.println("Added " + sensorName);
     }
 
     public String increase(int sensorNumber)
     {
         if (!sensors.get(sensorNumber - 1).sensorName.isEmpty())
         {
-            if (sensors.get(sensorNumber - 1).sampleRate <= 2048)
+            if (sensors.get(sensorNumber - 1).sampleRate < 4096)
             {
                 sensors.get(sensorNumber - 1).sampleRate = (2 * sensors.get(sensorNumber - 1).sampleRate);
                 String answer = "Successful, Sensor " + sensorNumber + " now has an update rate of " + sensors.get(sensorNumber - 1).sampleRate + " Seconds.";
@@ -125,7 +128,7 @@ public class SensorHandler
         }
         if (!sensors.get(sensorNumber - 1).sensorName.isEmpty())
         {
-            sample = new SampleHandler(sensors.get(sensorNumber - 1).sensorName, sensors.get(sensorNumber - 1).sampleRate, sensors.get(sensorNumber - 1).sampleValue);
+            sample = new SampleHandler(sensors.get(sensorNumber - 1).sensorName, sensors.get(sensorNumber - 1).sampleRate, sensors.get(sensorNumber - 1).sampleValue, serialHandler);
             Thread sh = new Thread(sample, sensorNumber + "");
             sh.start();
 
@@ -148,14 +151,13 @@ public class SensorHandler
         {
             answer = answer + st.sensorName + ", ";
         }
-        System.out.println(answer);
         return answer;
     }
 
     public String wipeLog() throws IOException
     {
-        FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
-        //FileWriter file = new FileWriter("SensorData.log");
+        //FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
+        FileWriter file = new FileWriter("SensorData.log");
         PrintWriter out = new PrintWriter(file);
         out.close();
         String answer = "Log has been wiped.";

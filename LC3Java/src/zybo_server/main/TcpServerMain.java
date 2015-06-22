@@ -1,20 +1,17 @@
 package zybo_server.main;
 
-import zybo_server.connections.TcpServer;
+import zybo_server.connections.Connector;
 import zybo_server.connections.TcpServerPing;
-import zybo_server.connections.TcpServerSerial;
 
 public class TcpServerMain 
 {
     public static void main(String argv[]) throws Exception
     {
-        TcpServer server = new TcpServer();
+        Connector server = new Connector();
         TcpServerPing ping = new TcpServerPing();
-        TcpServerSerial serialServer = new TcpServerSerial();
         Thread welcomeServer = new Thread(server);
         Thread pingServer = new Thread(ping);     
         pingServer.start();
-        serialServer.start();
-        welcomeServer.start();        
+        welcomeServer.start();  
     }
 }

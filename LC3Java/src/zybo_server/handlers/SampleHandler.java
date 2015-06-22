@@ -11,22 +11,29 @@ public class SampleHandler implements Runnable
 {
 
     private final SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private SerialHandler serialHandler;
     private final String sensorName;
     private final int sampleRate;
     private final int sampleValue;
     private boolean exit;
 
-    public SampleHandler(String name, int rate, int value)
+    public SampleHandler(String name, int rate, int value, SerialHandler serialHandler)
     {
+        this.serialHandler = serialHandler;
         sensorName = name;
         sampleRate = rate;
         sampleValue = value;
         exit = false;
+        
+        
     }
 
-    public synchronized void saveToFile() throws IOException
+    public synchronized void startSampling() throws IOException, InterruptedException
     {
-        //if (new File("SensorData.log").exists())
+        serialHandler.write(0x7C);
+        System.out.println(serialHandler.readLine());
+
+        /*//if (new File("SensorData.log").exists())
         if (new File("/home/xilinx/SensorData.log").exists())
         {
             FileWriter file = new FileWriter("/home/xilinx/SensorData.log", true);
@@ -42,7 +49,7 @@ public class SampleHandler implements Runnable
             PrintWriter out = new PrintWriter(file);
             out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
             out.close();
-        }
+        }*/
     }
 
     @Override
@@ -54,18 +61,18 @@ public class SampleHandler implements Runnable
             {
                 if (!exit)
                 {
-                    saveToFile();
+                    startSampling();
                     Thread.sleep(sampleRate * 1000);
                 }
                 else
-                {
+                {                   
                     return;
                 }
             }
             catch (InterruptedException e)
             {
-                System.out.println("\n" + date.format(new Date()) + " - Logging of " + sensorName + " stopped.");
-                return;
+                System.out.println("\n" + date.format(new Date()) + " - Logging of " + sensorName + " stopped.");               
+                exit = true;
             }
             catch (IOException e)
             {

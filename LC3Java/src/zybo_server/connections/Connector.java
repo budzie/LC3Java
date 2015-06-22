@@ -8,17 +8,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import sockethandler.SocketHandler;
+import zybo_server.handlers.SerialHandler;
 
-public class TcpServer implements Runnable
+public class Connector implements Runnable
 {
 
     private final SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private SocketHandler socketHandler;
+    private SerialHandler serialHandler;
     private final int port;
 
-    public TcpServer()
+    public Connector()
     {
         port = 8001;
+        serialHandler = new SerialHandler();
     }
 
     @Override
@@ -41,14 +44,16 @@ public class TcpServer implements Runnable
             ServerSocket welcomeSocket = new ServerSocket(port);
             System.out.println("\n" + date.format(new Date()) + " - "
                     + "Ready for connections on port " + port);
+            
             while (true)
             {
                 Socket connectionSocket = welcomeSocket.accept();
-                socketHandler = new SocketHandler(connectionSocket);
+                socketHandler = new SocketHandler(connectionSocket);               
                 System.out.println("\n" + date.format(new Date()) + " - "
-                        + "Client connecting on port " + port);                
+                        + "Client connecting on port " + port);  
+                serialHandler.initialize();
                 ConnectionHandler ch = 
-                        new ConnectionHandler(port, socketHandler);
+                        new ConnectionHandler(port, socketHandler, serialHandler);
                 Thread t1 = new Thread(ch);
                 t1.start();
             }           

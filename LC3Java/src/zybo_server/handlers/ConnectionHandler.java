@@ -12,14 +12,16 @@ public class ConnectionHandler implements Runnable
 {
     private final SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private final SocketHandler socketHandler;
-    private SensorHandler sensor;
+    private SensorHandler sensorHandler;
     private final int port;
+    private SerialHandler serialHandler;
 
-    public ConnectionHandler(int port, SocketHandler socketHandler) 
+    public ConnectionHandler(int port, SocketHandler socketHandler, SerialHandler serialHandler) 
             throws IOException
     {
         this.port = port;
         this.socketHandler = socketHandler;
+        this.serialHandler = serialHandler;  
     }
   
     public void run()
@@ -31,7 +33,7 @@ public class ConnectionHandler implements Runnable
             {
                 System.out.println("\n" + date.format(new Date()) + 
                         " - Client connected on port " + port);
-                sensor = new SensorHandler();
+                sensorHandler = new SensorHandler(serialHandler);
                 while (true)
                 {                   
                     clientSentence = socketHandler.readLine();
@@ -40,13 +42,14 @@ public class ConnectionHandler implements Runnable
                         System.out.println("\n" + date.format(new Date()) + 
                                 " - Client has disconnected from port " + port);
                         socketHandler.disconnect();
+                        serialHandler.close();
                         break;
                     }
                     if (!clientSentence.equals("GSTAT"))
                         System.out.println("\n" + date.format(new Date()) + 
                                 " - Recieved: " + clientSentence);
                     
-                    serverCommand(sensor, clientSentence);
+                    serverCommand(sensorHandler, clientSentence);
                 }
                 break;
             }        
@@ -55,6 +58,7 @@ public class ConnectionHandler implements Runnable
         {
             System.out.println("Socket closed.");
             socketHandler.disconnect();
+            serialHandler.close();
         }
         catch (InterruptedException ex)
         {
@@ -65,6 +69,7 @@ public class ConnectionHandler implements Runnable
             System.out.println("\n" + date.format(new Date()) + 
                     " - Client has disconnected from port " + port);
             socketHandler.disconnect();
+            serialHandler.close();
         }
     }
     
