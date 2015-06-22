@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.io.OutputStreamWriter;
 
-public class SerialHandler extends Thread implements SerialPortEventListener
+public class SerialHandler implements SerialPortEventListener
 {
 
     private final File lockFile = new File("/var/lock/LCK..ttyPS1");
@@ -24,24 +24,7 @@ public class SerialHandler extends Thread implements SerialPortEventListener
     private final int TIME_OUT = 200000;
     private final int DATA_RATE = 115200;
 
-    public void run()
-    {
-        while (true)
-        {
-            try
-            {
-                this.initialize();
-                System.out.println("Started");
-                Thread.sleep(1000000);
-            }
-            catch (InterruptedException ex)
-            {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private void initialize()
+    public void initialize()
     {
         // Removing stale lock file:
         lockFile.delete();

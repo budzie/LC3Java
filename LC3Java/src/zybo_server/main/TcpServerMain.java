@@ -2,7 +2,7 @@ package zybo_server.main;
 
 import zybo_server.connections.TcpServer;
 import zybo_server.connections.TcpServerPing;
-import zybo_server.handlers.SerialHandler;
+import zybo_server.connections.TcpServerSerial;
 
 public class TcpServerMain 
 {
@@ -10,11 +10,11 @@ public class TcpServerMain
     {
         TcpServer server = new TcpServer();
         TcpServerPing ping = new TcpServerPing();
-        SerialHandler serialServer = new SerialHandler();
+        TcpServerSerial serialServer = new TcpServerSerial();
         Thread welcomeServer = new Thread(server);
-        Thread pingServer = new Thread(ping);
-        serialServer.start();
+        Thread pingServer = new Thread(ping);     
         pingServer.start();
+        serialServer.start();
         welcomeServer.start();        
     }
 }
