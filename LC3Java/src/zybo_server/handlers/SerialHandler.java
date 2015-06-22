@@ -12,8 +12,6 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.OutputStreamWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SerialHandler extends Thread implements SerialPortEventListener
 {
