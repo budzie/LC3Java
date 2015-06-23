@@ -15,7 +15,6 @@ public class SampleHandler implements Runnable
     private final String sensorName;
     private final int sensorNr;
     private final int sampleRate;
-    private int sampleValue;
     private boolean exit;
 
     public SampleHandler(int nr, String name, int rate, SerialHandler serialHandler)
@@ -23,7 +22,7 @@ public class SampleHandler implements Runnable
         this.serialHandler = serialHandler;
         sensorNr = nr;
         sensorName = name;
-        sampleRate = rate;       
+        sampleRate = rate;
         exit = false;
     }
 
@@ -63,39 +62,46 @@ public class SampleHandler implements Runnable
                     binaryOutput = 0b00010111;
                     break;
             }
-            serialHandler.write(binaryOutput);         // Send opcode to choose sensor and start sampling
+            serialHandler.write(binaryOutput);              // Send opcode to choose sensor and start sampling           
+            binaryString = Integer.toBinaryString(serialHandler.read());
             System.out.println("Sent: " + binaryOutput);
+            System.out.println(binaryString);
             if (binaryString.equals("1110000"))
             {
+                serialHandler.write(0x7C);
                 binaryString = Integer.toBinaryString(serialHandler.read());
-                System.out.println(binaryString);
-                if (new File("SensorData.log").exists())
-                //if (new File("/home/xilinx/SensorData.log").exists())
+                if (binaryString.equals("1110000"))
                 {
-                    //FileWriter file = new FileWriter("/home/xilinx/SensorData.log", true);
-                    FileWriter file = new FileWriter("SensorData.log", true);
-                    PrintWriter out = new PrintWriter(file);
-                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-                    out.close();
+                    serialHandler.write(0x20);
+                    String sampleValue = serialHandler.readLine();
+                    System.out.println(sampleValue);
+                    if (new File("SensorData.log").exists())
+                    //if (new File("/home/xilinx/SensorData.log").exists())
+                    {
+                        //FileWriter file = new FileWriter("/home/xilinx/SensorData.log", true);
+                        FileWriter file = new FileWriter("SensorData.log", true);
+                        PrintWriter out = new PrintWriter(file);
+                        out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                        out.close();
+                    }
+                    else
+                    {
+                        //FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
+                        FileWriter file = new FileWriter("SensorData.log");
+                        PrintWriter out = new PrintWriter(file);
+                        out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                        out.close();
+                    }
                 }
                 else
-                {
-                    //FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
-                    FileWriter file = new FileWriter("SensorData.log");
-                    PrintWriter out = new PrintWriter(file);
-                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-                    out.close();
-                }
+                    exit = true;
             }
             else
-            {
                 exit = true;
-            }
         }
         else
-        {
+
             exit = true;
-        }
     }
 
     @Override

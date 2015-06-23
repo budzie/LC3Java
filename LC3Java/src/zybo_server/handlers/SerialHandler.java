@@ -119,7 +119,30 @@ public class SerialHandler //implements SerialPortEventListener
             }
         }
     }
-
+      
+      public synchronized String readString() throws IOException
+    {
+        int inputLine;
+        String inputString = null;
+        while (true)
+        {
+            if (input.ready())
+            {
+                inputLine = input.read();
+                if (inputLine > 0)
+                {
+                    inputString = inputString + (inputLine + "0");
+                    int nl = input.read();
+                    if (nl == 10)
+                    {
+                       return inputString;
+                    }
+                    inputString = inputString + (nl + "0");
+                }
+            }
+        }
+    }
+      
     public synchronized void write(int outputByte)
     {
         try
