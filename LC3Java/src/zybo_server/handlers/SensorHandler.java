@@ -21,25 +21,24 @@ public class SensorHandler
         this.serialHandler = serialHandler;
         sensors = new ArrayList<SensorType>();
         
-        BufferedReader ind = new BufferedReader(new FileReader("Sensors.txt"));
+        BufferedReader in = new BufferedReader(new FileReader("Sensors.txt"));
 
-        String linje = ind.readLine();
-        while (linje != null)
+        String line = in.readLine();
+        while (line != null)
         {
-            String[] bidder = linje.split("_");
-            String sensorName = bidder[0];
-            int sensorRate = Integer.parseInt(bidder[1]);
-            int sensorValue = Integer.parseInt(bidder[2]);
-            addSensor(sensorName, sensorRate, sensorValue);
-            linje = ind.readLine();
+            String[] parts = line.split("_");
+            String sensorName = parts[0];
+            int sensorRate = Integer.parseInt(parts[1]);
+            addSensor(sensorName, sensorRate);
+            line = in.readLine();
         }
-        ind.close();
+        in.close();
         
     }
 
-    private void addSensor(String sensorName, int sensorRate, int sensorValue)
+    private void addSensor(String sensorName, int sensorRate)
     {
-        sensors.add(new SensorType(sensorName, sensorRate, sensorValue));
+        sensors.add(new SensorType(sensorName, sensorRate));
         System.out.println("Added " + sensorName);
     }
 
@@ -128,7 +127,7 @@ public class SensorHandler
         }
         if (!sensors.get(sensorNumber - 1).sensorName.isEmpty())
         {
-            sample = new SampleHandler(sensors.get(sensorNumber - 1).sensorName, sensors.get(sensorNumber - 1).sampleRate, sensors.get(sensorNumber - 1).sampleValue, serialHandler);
+            sample = new SampleHandler(sensorNumber - 1, sensors.get(sensorNumber - 1).sensorName, sensors.get(sensorNumber - 1).sampleRate, serialHandler);
             Thread sh = new Thread(sample, sensorNumber + "");
             sh.start();
 

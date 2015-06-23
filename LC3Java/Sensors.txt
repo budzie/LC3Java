@@ -1,5 +1,8 @@
-Sensor 1_24
-Sensor 2_24
-Sensor 3_24
-Sensor 4_24
-Sensor 5_24
+Sensor 1_8_1
+Sensor 2_8_2
+Sensor 3_8_3
+Sensor 4_8_4
+Sensor 5_8_5
+Sensor 6_8_6
+Sensor 7_8_7
+Sensor 8_8_8

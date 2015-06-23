@@ -84,7 +84,7 @@ public class SerialHandler //implements SerialPortEventListener
         }
     }
 
-    public synchronized String readLine() throws IOException
+    public String readLine() throws IOException
     {
         String inputLine = null;
         while (true)
@@ -92,9 +92,29 @@ public class SerialHandler //implements SerialPortEventListener
             if (input.ready())
             {
                 inputLine = input.readLine();
-                if (!inputLine.equals(null))
+                while (!inputLine.equals(null))
                 {
                     return inputLine;
+                }
+            }
+        }
+    }
+    
+      public synchronized int read() throws IOException
+    {
+        int inputLine;
+        while (true)
+        {
+            if (input.ready())
+            {
+                inputLine = input.read();
+                if (inputLine > 0)
+                {
+                    int nl = input.read();
+                    if (nl == 10)
+                    {
+                       return inputLine; 
+                    }              
                 }
             }
         }

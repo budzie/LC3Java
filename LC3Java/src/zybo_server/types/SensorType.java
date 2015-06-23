@@ -4,12 +4,10 @@ public class SensorType
 {
     public String sensorName;
     public int sampleRate;
-    public int sampleValue;
 
-    public SensorType(String sensorName, int sampleRate, int sampleValue)
+    public SensorType(String sensorName, int sampleRate)
     {
         this.sensorName = sensorName;
         this.sampleRate = sampleRate;
-        this.sampleValue = sampleValue;
     }   
 }

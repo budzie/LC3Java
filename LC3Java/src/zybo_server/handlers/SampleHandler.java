@@ -11,45 +11,91 @@ public class SampleHandler implements Runnable
 {
 
     private final SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    private SerialHandler serialHandler;
+    private final SerialHandler serialHandler;
     private final String sensorName;
+    private final int sensorNr;
     private final int sampleRate;
-    private final int sampleValue;
+    private int sampleValue;
     private boolean exit;
 
-    public SampleHandler(String name, int rate, int value, SerialHandler serialHandler)
+    public SampleHandler(int nr, String name, int rate, SerialHandler serialHandler)
     {
         this.serialHandler = serialHandler;
+        sensorNr = nr;
         sensorName = name;
-        sampleRate = rate;
-        sampleValue = value;
+        sampleRate = rate;       
         exit = false;
-        
-        
     }
 
     public synchronized void startSampling() throws IOException, InterruptedException
     {
+        String binaryString;
         serialHandler.write(0x7C);
-        System.out.println(serialHandler.readLine());
-
-        /*//if (new File("SensorData.log").exists())
-        if (new File("/home/xilinx/SensorData.log").exists())
+        binaryString = Integer.toBinaryString(serialHandler.read());
+        if (binaryString.equals("1110000"))
         {
-            FileWriter file = new FileWriter("/home/xilinx/SensorData.log", true);
-            //FileWriter file = new FileWriter("SensorData.log", true);
-            PrintWriter out = new PrintWriter(file);
-            out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-            out.close();
+            int binaryOutput = 0;
+
+            switch (sensorNr)
+            {
+                case 0:
+                    binaryOutput = 0b00010000;
+                    break;
+                case 1:
+                    binaryOutput = 0b00010001;
+                    break;
+                case 2:
+                    binaryOutput = 0b00010010;
+                    break;
+                case 3:
+                    binaryOutput = 0b00010011;
+                    break;
+                case 4:
+                    binaryOutput = 0b00010100;
+                    break;
+                case 5:
+                    binaryOutput = 0b00010101;
+                    break;
+                case 6:
+                    binaryOutput = 0b00010110;
+                    break;
+                case 7:
+                    binaryOutput = 0b00010111;
+                    break;
+            }
+            serialHandler.write(binaryOutput);         // Send opcode to choose sensor and start sampling
+            System.out.println("Sent: " + binaryOutput);
+            if (binaryString.equals("1110000"))
+            {
+                binaryString = Integer.toBinaryString(serialHandler.read());
+                System.out.println(binaryString);
+                if (new File("SensorData.log").exists())
+                //if (new File("/home/xilinx/SensorData.log").exists())
+                {
+                    //FileWriter file = new FileWriter("/home/xilinx/SensorData.log", true);
+                    FileWriter file = new FileWriter("SensorData.log", true);
+                    PrintWriter out = new PrintWriter(file);
+                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                    out.close();
+                }
+                else
+                {
+                    //FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
+                    FileWriter file = new FileWriter("SensorData.log");
+                    PrintWriter out = new PrintWriter(file);
+                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                    out.close();
+                }
+            }
+            else
+            {
+                exit = true;
+            }
         }
         else
         {
-            FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
-            //FileWriter file = new FileWriter("SensorData.log");
-            PrintWriter out = new PrintWriter(file);
-            out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-            out.close();
-        }*/
+            exit = true;
+        }
     }
 
     @Override
@@ -65,13 +111,13 @@ public class SampleHandler implements Runnable
                     Thread.sleep(sampleRate * 1000);
                 }
                 else
-                {                   
+                {
                     return;
                 }
             }
             catch (InterruptedException e)
             {
-                System.out.println("\n" + date.format(new Date()) + " - Logging of " + sensorName + " stopped.");               
+                System.out.println("\n" + date.format(new Date()) + " - Logging of " + sensorName + " stopped.");
                 exit = true;
             }
             catch (IOException e)
