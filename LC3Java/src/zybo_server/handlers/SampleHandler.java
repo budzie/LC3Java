@@ -15,6 +15,7 @@ public class SampleHandler implements Runnable
     private final String sensorName;
     private final int sensorNr;
     private final int sampleRate;
+    private static String sampleValue;
     private boolean exit;
 
     public SampleHandler(int nr, String name, int rate, SerialHandler serialHandler)
@@ -24,6 +25,11 @@ public class SampleHandler implements Runnable
         sensorName = name;
         sampleRate = rate;
         exit = false;
+    }
+    
+    public String getSampleValue()
+    {
+        return sampleValue;
     }
 
     public synchronized void startSampling() throws IOException, InterruptedException
@@ -64,7 +70,6 @@ public class SampleHandler implements Runnable
             }
             serialHandler.write(binaryOutput);              // Send opcode to choose sensor and start sampling           
             binaryString = Integer.toBinaryString(serialHandler.read());
-            System.out.println("Sent: " + binaryOutput);
             System.out.println(binaryString);
             if (binaryString.equals("1110000"))
             {
@@ -73,8 +78,8 @@ public class SampleHandler implements Runnable
                 if (binaryString.equals("1110000"))
                 {
                     serialHandler.write(0x20);
-                    String sampleValue = serialHandler.readLine();
-                    System.out.println(sampleValue);
+                    sampleValue = serialHandler.readLine();
+                    System.out.println("Recieved sample value from " + sensorName + ": " + sampleValue);
                     if (new File("SensorData.log").exists())
                     //if (new File("/home/xilinx/SensorData.log").exists())
                     {
