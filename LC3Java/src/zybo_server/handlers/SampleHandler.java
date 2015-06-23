@@ -78,7 +78,7 @@ public class SampleHandler implements Runnable
                 if (binaryString.equals("1110000"))
                 {
                     serialHandler.write(0x20);
-                    sampleValue = serialHandler.readLine();
+                    sampleValue = Integer.toBinaryString(serialHandler.read());
                     System.out.println("Recieved sample value from " + sensorName + ": " + sampleValue);
                     if (new File("SensorData.log").exists())
                     //if (new File("/home/xilinx/SensorData.log").exists())
