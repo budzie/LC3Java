@@ -155,8 +155,8 @@ public class SensorHandler
 
     public String wipeLog() throws IOException
     {
-        //FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
-        FileWriter file = new FileWriter("SensorData.log");
+        FileWriter file = new FileWriter("/home/xilinx/ADCvalues.log");
+        //FileWriter file = new FileWriter("ADCvalues.log");
         PrintWriter out = new PrintWriter(file);
         out.close();
         String answer = "Log has been wiped.";

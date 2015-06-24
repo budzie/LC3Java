@@ -17,6 +17,7 @@ public class SampleHandler implements Runnable
     private final int sampleRate;
     private static String sampleValue;
     private boolean exit;
+    private String binaryString;
 
     public SampleHandler(int nr, String name, int rate, SerialHandler serialHandler)
     {
@@ -26,15 +27,14 @@ public class SampleHandler implements Runnable
         sampleRate = rate;
         exit = false;
     }
-    
+
     public String getSampleValue()
     {
         return sampleValue;
     }
 
-    public synchronized void startSampling() throws IOException, InterruptedException
+    private synchronized Boolean selectChannel() throws IOException
     {
-        String binaryString;
         serialHandler.write(0x7C);
         binaryString = Integer.toBinaryString(serialHandler.read());
         if (binaryString.equals("1110000"))
@@ -68,74 +68,94 @@ public class SampleHandler implements Runnable
                     binaryOutput = 0b00010111;
                     break;
             }
-            serialHandler.write(binaryOutput);              // Send opcode to choose sensor and start sampling           
+            serialHandler.write(binaryOutput);              // Send opcode to choose sensor
             binaryString = Integer.toBinaryString(serialHandler.read());
-            System.out.println(binaryString);
             if (binaryString.equals("1110000"))
             {
-                serialHandler.write(0x7C);
-                binaryString = Integer.toBinaryString(serialHandler.read());
-                if (binaryString.equals("1110000"))
+                return true;
+            }
+        }
+        return false;
+    }
+        
+    
+
+    private synchronized void startSampling() throws IOException, InterruptedException
+    {
+        
+        
+        serialHandler.write(0x7C);
+            binaryString = Integer.toBinaryString(serialHandler.read());
+            if (binaryString.equals("1110000"))
+            {
+                serialHandler.write(0x20);
+                int sampleByte0 = serialHandler.read();
+                int sampleByte1 = serialHandler.read();
+                System.out.println("Recieved sample byte0 from " + sensorName + ": " + sampleByte0);
+                System.out.println("Recieved sample byte1 from " + sensorName + ": " + sampleByte1);               
+                int totalSampleValue = sampleByte0;
+                totalSampleValue = (totalSampleValue << 8) | sampleByte1;
+                long unsignedValue = totalSampleValue & 0xffffffffl;                            
+                System.out.println("Recieved sample value from " + sensorName + ": " + totalSampleValue);
+                //if (new File("ADCvalues.log").exists())
+                if (new File("/home/xilinx/ADCvalues.log").exists())
                 {
-                    serialHandler.write(0x20);
-                    sampleValue = Integer.toBinaryString(serialHandler.read());
-                    System.out.println("Recieved sample value from " + sensorName + ": " + sampleValue);
-                    if (new File("SensorData.log").exists())
-                    //if (new File("/home/xilinx/SensorData.log").exists())
+                    FileWriter file = new FileWriter("/home/xilinx/ADCvalues.log", true);
+                    //FileWriter file = new FileWriter("ADCvalues.log", true);
+                    PrintWriter out = new PrintWriter(file);
+                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                    out.close();
+                }
+                else
+                {
+                    FileWriter file = new FileWriter("/home/xilinx/ADCvalues.log");
+                    //FileWriter file = new FileWriter("ADCvalues.log");
+                    PrintWriter out = new PrintWriter(file);
+                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                    out.close();
+                }
+            }
+            else
+            {
+                exit = true;
+            }
+}
+
+@Override
+    public void run()
+    {
+        try
+        {
+            selectChannel();
+            while (true)
+            {
+                try
+                {
+                    if (!exit)
                     {
-                        //FileWriter file = new FileWriter("/home/xilinx/SensorData.log", true);
-                        FileWriter file = new FileWriter("SensorData.log", true);
-                        PrintWriter out = new PrintWriter(file);
-                        out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-                        out.close();
+                        startSampling();
+                        Thread.sleep(sampleRate * 1200);
                     }
                     else
                     {
-                        //FileWriter file = new FileWriter("/home/xilinx/SensorData.log");
-                        FileWriter file = new FileWriter("SensorData.log");
-                        PrintWriter out = new PrintWriter(file);
-                        out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-                        out.close();
+                        return;
                     }
                 }
-                else
+                catch (InterruptedException e)
+                {
+                    System.out.println("\n" + date.format(new Date()) + " - Logging of " + sensorName + " stopped.");
                     exit = true;
+                }
+                catch (IOException e)
+                {
+                    System.out.println("\n" + date.format(new Date()) + " - Cannot write sensor-data to log.");
+                    exit = true;
+                }
             }
-            else
-                exit = true;
         }
-        else
-
-            exit = true;
-    }
-
-    @Override
-    public void run()
-    {
-        while (true)
+        catch (IOException ex)
         {
-            try
-            {
-                if (!exit)
-                {
-                    startSampling();
-                    Thread.sleep(sampleRate * 1000);
-                }
-                else
-                {
-                    return;
-                }
-            }
-            catch (InterruptedException e)
-            {
-                System.out.println("\n" + date.format(new Date()) + " - Logging of " + sensorName + " stopped.");
-                exit = true;
-            }
-            catch (IOException e)
-            {
-                System.out.println("\n" + date.format(new Date()) + " - Cannot write sensor-data to log.");
-                exit = true;
-            }
+            System.out.println("\n" + date.format(new Date()) + " - Cannot change sensor channel.");
         }
     }
 }

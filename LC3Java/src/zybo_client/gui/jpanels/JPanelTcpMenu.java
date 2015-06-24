@@ -23,7 +23,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         // User-message:
         setText("Connected on " + ip + ":" + 8001 + " (TCP)\n");
         // Boolean-array to hold sensor-states:
-        sensorStates = new boolean[5];
+        sensorStates = new boolean[8];
         ssHandler = new SensorStateHandler(ip, handler);
         Thread ssH = new Thread(ssHandler);
         ssH.start();
@@ -49,6 +49,9 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton1 = new javax.swing.JRadioButton();
         StopButton = new javax.swing.JButton();
         StatusButton = new javax.swing.JButton();
+        jRadioButton8 = new javax.swing.JRadioButton();
+        jRadioButton6 = new javax.swing.JRadioButton();
+        jRadioButton7 = new javax.swing.JRadioButton();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setFocusable(false);
@@ -110,7 +113,6 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton2.setText("Sensor 2");
         jRadioButton2.setContentAreaFilled(false);
         jRadioButton2.setFocusable(false);
-        jRadioButton2.setRolloverEnabled(false);
         jRadioButton2.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -122,7 +124,6 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton3.setText("Sensor 3");
         jRadioButton3.setContentAreaFilled(false);
         jRadioButton3.setFocusable(false);
-        jRadioButton3.setRolloverEnabled(false);
         jRadioButton3.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -134,7 +135,6 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton4.setText("Sensor 4");
         jRadioButton4.setContentAreaFilled(false);
         jRadioButton4.setFocusable(false);
-        jRadioButton4.setRolloverEnabled(false);
         jRadioButton4.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -146,7 +146,6 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton5.setText("Sensor 5");
         jRadioButton5.setContentAreaFilled(false);
         jRadioButton5.setFocusable(false);
-        jRadioButton5.setRolloverEnabled(false);
         jRadioButton5.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -180,7 +179,6 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton1.setText("Sensor 1");
         jRadioButton1.setContentAreaFilled(false);
         jRadioButton1.setFocusable(false);
-        jRadioButton1.setRolloverEnabled(false);
         jRadioButton1.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -211,6 +209,39 @@ public class JPanelTcpMenu extends javax.swing.JPanel
             }
         });
 
+        jRadioButton8.setText("Sensor 8");
+        jRadioButton8.setContentAreaFilled(false);
+        jRadioButton8.setFocusable(false);
+        jRadioButton8.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jRadioButton8ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton6.setText("Sensor 6");
+        jRadioButton6.setContentAreaFilled(false);
+        jRadioButton6.setFocusable(false);
+        jRadioButton6.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jRadioButton6ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton7.setText("Sensor 7");
+        jRadioButton7.setContentAreaFilled(false);
+        jRadioButton7.setFocusable(false);
+        jRadioButton7.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jRadioButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -218,14 +249,19 @@ public class JPanelTcpMenu extends javax.swing.JPanel
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane1)
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jRadioButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRadioButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRadioButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRadioButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRadioButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(22, 22, 22))
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jRadioButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadioButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jRadioButton7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jRadioButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jRadioButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jRadioButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jRadioButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jRadioButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(102, 102, 102)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -250,24 +286,31 @@ public class JPanelTcpMenu extends javax.swing.JPanel
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {DeleteButton, ExitButton, ListButton, SensorMinusButton, SensorPlusButton, StartButton, StatusButton, StopButton});
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jRadioButton1, jRadioButton2, jRadioButton3, jRadioButton4, jRadioButton5});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jRadioButton1, jRadioButton2, jRadioButton3, jRadioButton4, jRadioButton5, jRadioButton6, jRadioButton7, jRadioButton8});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addComponent(jRadioButton1)
-                        .addGap(7, 7, 7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioButton2)
-                        .addGap(10, 10, 10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioButton3)
-                        .addGap(10, 10, 10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jRadioButton4)
-                        .addGap(10, 10, 10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton8)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -288,7 +331,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {SensorMinusButton, SensorPlusButton});
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jRadioButton1, jRadioButton2, jRadioButton3, jRadioButton4, jRadioButton5});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jRadioButton1, jRadioButton2, jRadioButton3, jRadioButton4, jRadioButton5, jRadioButton6, jRadioButton7, jRadioButton8});
 
     }// </editor-fold>//GEN-END:initComponents
 
@@ -455,6 +498,21 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         }
     }//GEN-LAST:event_StatusButtonActionPerformed
 
+    private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton7ActionPerformed
+    {//GEN-HEADEREND:event_jRadioButton7ActionPerformed
+        sensorStates[6] = !sensorStates[6];
+    }//GEN-LAST:event_jRadioButton7ActionPerformed
+
+    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton6ActionPerformed
+    {//GEN-HEADEREND:event_jRadioButton6ActionPerformed
+        sensorStates[5] = !sensorStates[5];
+    }//GEN-LAST:event_jRadioButton6ActionPerformed
+
+    private void jRadioButton8ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton8ActionPerformed
+    {//GEN-HEADEREND:event_jRadioButton8ActionPerformed
+        sensorStates[7] = !sensorStates[7];
+    }//GEN-LAST:event_jRadioButton8ActionPerformed
+
     public void setText(String in)
     {
         jTextArea.setText(in);
@@ -485,7 +543,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         String states = ssHandler.getStates();
         if (!states.equals("null"))
         {
-            for (int i = 1; i < 6; i++)
+            for (int i = 1; i < 9; i++)
             {
                 Color color = Color.RED;
                 if (states.contains(i + ""))
@@ -507,6 +565,15 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                     case 5:
                         button = jRadioButton5;
                         break;
+                    case 6:
+                        button = jRadioButton8;
+                        break;   
+                    case 7:
+                        button = jRadioButton6;
+                        break;
+                    case 8:
+                        button = jRadioButton7;
+                        break;                        
                 }
                 paintOval(g, button, color);
                 repaint();
@@ -546,6 +613,9 @@ public class JPanelTcpMenu extends javax.swing.JPanel
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JRadioButton jRadioButton6;
+    private javax.swing.JRadioButton jRadioButton7;
+    private javax.swing.JRadioButton jRadioButton8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea;
     // End of variables declaration//GEN-END:variables
