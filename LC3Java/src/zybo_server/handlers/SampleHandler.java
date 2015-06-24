@@ -77,51 +77,48 @@ public class SampleHandler implements Runnable
         }
         return false;
     }
-        
-    
 
     private synchronized void startSampling() throws IOException, InterruptedException
     {
-        
-        
+
         serialHandler.write(0x7C);
-            binaryString = Integer.toBinaryString(serialHandler.read());
-            if (binaryString.equals("1110000"))
+        binaryString = Integer.toBinaryString(serialHandler.read());
+        if (binaryString.equals("1110000"))
+        {
+            serialHandler.write(0x20);
+            int sampleByte0 = serialHandler.read();
+            int sampleByte1 = serialHandler.read();
+            System.out.println("Recieved sample byte0 from " + sensorName + ": " + sampleByte0);
+            System.out.println("Recieved sample byte1 from " + sensorName + ": " + sampleByte1);
+            int totalSampleValue = sampleByte0;
+            totalSampleValue = (totalSampleValue << 8) | sampleByte1;
+            long unsignedValue = totalSampleValue & 0xffffffffl;
+            System.out.println("Recieved sample value from " + sensorName + ": " + totalSampleValue);
+            //if (new File("ADCvalues.log").exists())
+            if (new File("/home/xilinx/ADCvalues.log").exists())
             {
-                serialHandler.write(0x20);
-                int sampleByte0 = serialHandler.read();
-                int sampleByte1 = serialHandler.read();
-                System.out.println("Recieved sample byte0 from " + sensorName + ": " + sampleByte0);
-                System.out.println("Recieved sample byte1 from " + sensorName + ": " + sampleByte1);               
-                int totalSampleValue = sampleByte0;
-                totalSampleValue = (totalSampleValue << 8) | sampleByte1;
-                long unsignedValue = totalSampleValue & 0xffffffffl;                            
-                System.out.println("Recieved sample value from " + sensorName + ": " + totalSampleValue);
-                //if (new File("ADCvalues.log").exists())
-                if (new File("/home/xilinx/ADCvalues.log").exists())
-                {
-                    FileWriter file = new FileWriter("/home/xilinx/ADCvalues.log", true);
-                    //FileWriter file = new FileWriter("ADCvalues.log", true);
-                    PrintWriter out = new PrintWriter(file);
-                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-                    out.close();
-                }
-                else
-                {
-                    FileWriter file = new FileWriter("/home/xilinx/ADCvalues.log");
-                    //FileWriter file = new FileWriter("ADCvalues.log");
-                    PrintWriter out = new PrintWriter(file);
-                    out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
-                    out.close();
-                }
+                FileWriter file = new FileWriter("/home/xilinx/ADCvalues.log", true);
+                //FileWriter file = new FileWriter("ADCvalues.log", true);
+                PrintWriter out = new PrintWriter(file);
+                out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                out.close();
             }
             else
             {
-                exit = true;
+                FileWriter file = new FileWriter("/home/xilinx/ADCvalues.log");
+                //FileWriter file = new FileWriter("ADCvalues.log");
+                PrintWriter out = new PrintWriter(file);
+                out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
+                out.close();
             }
-}
+        }
+        else
+        {
+            exit = true;
+        }
+    }
 
-@Override
+    @Override
     public void run()
     {
         try
