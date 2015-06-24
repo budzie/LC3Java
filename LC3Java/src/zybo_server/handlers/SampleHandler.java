@@ -87,13 +87,14 @@ public class SampleHandler implements Runnable
         {
             serialHandler.write(0x20);
             int sampleByte0 = serialHandler.read();
-            int sampleByte1 = serialHandler.read();
+            /*int sampleByte1 = serialHandler.read();
             System.out.println("Recieved sample byte0 from " + sensorName + ": " + sampleByte0);
             System.out.println("Recieved sample byte1 from " + sensorName + ": " + sampleByte1);
             int totalSampleValue = sampleByte0;
             totalSampleValue = (totalSampleValue << 8) | sampleByte1;
-            long unsignedValue = totalSampleValue & 0xffffffffl;
+            //long unsignedValue = totalSampleValue & 0xffffffffl;
             System.out.println("Recieved sample value from " + sensorName + ": " + totalSampleValue);
+            /*
             //if (new File("ADCvalues.log").exists())
             if (new File("/home/xilinx/ADCvalues.log").exists())
             {
@@ -110,7 +111,7 @@ public class SampleHandler implements Runnable
                 PrintWriter out = new PrintWriter(file);
                 out.println(date.format(new Date()) + " - Value of " + sensorName + " = " + sampleValue + " (" + sampleRate + " sec. sample rate)");
                 out.close();
-            }
+            }*/
         }
         else
         {

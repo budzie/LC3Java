@@ -2,8 +2,6 @@ package zybo_server.handlers;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
 
 import java.util.Enumeration;
 
