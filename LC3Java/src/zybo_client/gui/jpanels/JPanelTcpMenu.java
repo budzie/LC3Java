@@ -386,10 +386,8 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                 if (state)
                 {
                     String data = handler.start(i);
-                    if (!data.equals("null"))
-                    {
                         appendText("\n" + data);
-                    }
+                        setButtonLockOn();
                 }
                 i++;
             }
@@ -530,6 +528,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
     private void StopButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_StopButtonActionPerformed
     {//GEN-HEADEREND:event_StopButtonActionPerformed
         int i = 1;
+        //Component button;
         // Check all sensor-states and start sensor if true:
         for (boolean state : sensorStates)
         {
@@ -541,6 +540,8 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                     if (!data.equals("null"))
                     {
                         appendText("\n" + data);
+
+                        setButtonLockOff();
                     }
                 }
                 i++;
@@ -654,6 +655,18 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton8.setEnabled(false);
         button.setEnabled(true);
     }
+    
+    public void setButtonLockOn()
+    {
+        jRadioButton1.setEnabled(false);
+        jRadioButton2.setEnabled(false);
+        jRadioButton3.setEnabled(false);
+        jRadioButton4.setEnabled(false);
+        jRadioButton5.setEnabled(false);
+        jRadioButton6.setEnabled(false);
+        jRadioButton7.setEnabled(false);
+        jRadioButton8.setEnabled(false);
+    }
 
     private void paintOval(Graphics g, Component c, Color f)
     {
@@ -704,12 +717,6 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                 {
                     color = Color.GREEN;
                 }
-                if (checkButton)
-                {
-                    checkButton = false;
-                    setButtonLockOff();
-                }
-
                 paintOval(g, button, color);
                 repaint();
 
