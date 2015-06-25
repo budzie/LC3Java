@@ -91,7 +91,7 @@ public class JPanelCreator
         int screenHeight = (int) screenSize.getHeight();
         vindue.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         // Set window size:
-        vindue.setSize(940, 600);
+        vindue.setSize(960, 600);
         // Calculate centre:
         vindue.setLocation(((screenWidth / 2) - vindue.getWidth() / 2), 
                 ((screenHeight / 2) - vindue.getHeight() / 2));

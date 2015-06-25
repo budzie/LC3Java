@@ -38,6 +38,11 @@ public class SocketHandler
         return readLine();
     }
     
+    public synchronized void flush() throws IOException
+    {
+        out.flush();
+    }
+    
     public synchronized void print(String msg) throws IOException
     {
         out.writeBytes(msg);

@@ -540,8 +540,8 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                     if (!data.equals("null"))
                     {
                         appendText("\n" + data);
-
                         setButtonLockOff();
+                        setButtonSelectedOff();
                     }
                 }
                 i++;
@@ -641,19 +641,26 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton6.setEnabled(true);
         jRadioButton7.setEnabled(true);
         jRadioButton8.setEnabled(true);
-    }
-
-    public void setButtonLockOn(Component button)
+    }   
+    
+    public void setButtonSelectedOff()
     {
-        jRadioButton1.setEnabled(false);
-        jRadioButton2.setEnabled(false);
-        jRadioButton3.setEnabled(false);
-        jRadioButton4.setEnabled(false);
-        jRadioButton5.setEnabled(false);
-        jRadioButton6.setEnabled(false);
-        jRadioButton7.setEnabled(false);
-        jRadioButton8.setEnabled(false);
-        button.setEnabled(true);
+        jRadioButton1.setSelected(false);
+        sensorStates[0] = false;
+        jRadioButton2.setSelected(false);
+        sensorStates[1] = false;
+        jRadioButton3.setSelected(false);
+        sensorStates[2] = false;
+        jRadioButton4.setSelected(false);
+        sensorStates[3] = false;
+        jRadioButton5.setSelected(false);
+        sensorStates[4] = false;
+        jRadioButton6.setSelected(false);
+        sensorStates[5] = false;
+        jRadioButton7.setSelected(false);
+        sensorStates[6] = false;
+        jRadioButton8.setSelected(false);
+        sensorStates[7] = false;
     }
     
     public void setButtonLockOn()
@@ -666,6 +673,19 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton6.setEnabled(false);
         jRadioButton7.setEnabled(false);
         jRadioButton8.setEnabled(false);
+    }
+    
+    public void setButtonLockOn(Component button)
+    {
+        jRadioButton1.setEnabled(false);
+        jRadioButton2.setEnabled(false);
+        jRadioButton3.setEnabled(false);
+        jRadioButton4.setEnabled(false);
+        jRadioButton5.setEnabled(false);
+        jRadioButton6.setEnabled(false);
+        jRadioButton7.setEnabled(false);
+        jRadioButton8.setEnabled(false);
+        button.setEnabled(true);
     }
 
     private void paintOval(Graphics g, Component c, Color f)
@@ -738,7 +758,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         }
         catch (InterruptedException ex)
         {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 

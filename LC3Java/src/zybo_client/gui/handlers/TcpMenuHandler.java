@@ -75,12 +75,15 @@ public class TcpMenuHandler
         while (true)
         {
             answer = tcp.readLine();
-            line = line + answer + "\n";
-            if (answer.length() < 1)
+            if (!answer.equals("done"))
             {
+                line = line + answer + "\n";
+            }
+            else if (answer.equals("done") || answer.equals(null))
+            {
+                //tcp.flush();
                 return line;
             }
-            
         }
     }
 

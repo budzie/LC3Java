@@ -22,6 +22,6 @@ public class ZyboMain
         if (args.length == 1)
             new ZyboMain(args[0]);
         else
-            new ZyboMain("192.168.0.28");
+            new ZyboMain("192.168.1.2");
     }
 }

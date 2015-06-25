@@ -94,7 +94,6 @@ public class SampleHandler implements Runnable
             totalSampleValue = (totalSampleValue << 8) | sampleByte1;    
             
             System.out.println("Calculated 10-bit unsigned sample value from " + sensorName + ": #" + totalSampleValue);;
- 
             
             //if (new File("ADCvalues.log").exists())
             if (new File("/home/xilinx/ADCvalues.log").exists())
@@ -133,7 +132,7 @@ public class SampleHandler implements Runnable
                     if (!exit)
                     {
                         startSampling();
-                        Thread.sleep(sampleRate * 1200);
+                        Thread.sleep(sampleRate * 800);
                     }
                     else
                     {

@@ -48,7 +48,7 @@ public class ConnectionHandler implements Runnable
                     if (!clientSentence.equals("GSTAT"))
                         System.out.println("\n" + date.format(new Date()) + 
                                 " - Recieved: " + clientSentence);
-                    
+                                   
                     serverCommand(sensorHandler, clientSentence);
                 }
                 break;
@@ -133,6 +133,8 @@ public class ConnectionHandler implements Runnable
         else if (clientSentence.equals("GDATA"))
         {
             socketHandler.println(sensor.getData());
+            socketHandler.println("done");
+            socketHandler.flush();
         }
         
         else
