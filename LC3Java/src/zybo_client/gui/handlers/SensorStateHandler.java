@@ -20,7 +20,7 @@ public class SensorStateHandler implements Runnable
         while (true)
         {
             try
-            {
+            {                              
                 sensors = tcp.getStatus();
                 Thread.sleep(300);
             }

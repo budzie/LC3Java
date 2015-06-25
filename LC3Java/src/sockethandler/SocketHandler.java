@@ -32,29 +32,29 @@ public class SocketHandler
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
     
-    public String send(String in) throws IOException
+    public synchronized String send(String in) throws IOException
     {
         println(in);
         return readLine();
     }
     
-    public void print(String msg) throws IOException
+    public synchronized void print(String msg) throws IOException
     {
         out.writeBytes(msg);
         out.flush();
     }
 
-    public void println(String msg) throws IOException
+    public synchronized void println(String msg) throws IOException
     {
         print(msg + "\r\n");
     }
 
-    public String readLine() throws IOException
+    public synchronized String readLine() throws IOException
     {
         return in.readLine();
     }
 
-    public final void disconnect()
+    public synchronized final void disconnect()
     {
         try
         {

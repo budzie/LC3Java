@@ -33,7 +33,7 @@ public class ConnectionHandler implements Runnable
             {
                 System.out.println("\n" + date.format(new Date()) + 
                         " - Client connected on port " + port);
-                sensorHandler = new SensorHandler(serialHandler);
+                sensorHandler = new SensorHandler(serialHandler, socketHandler);
                 while (true)
                 {                   
                     clientSentence = socketHandler.readLine();
@@ -128,6 +128,11 @@ public class ConnectionHandler implements Runnable
         else if (clientSentence.equals("GSTAT"))
         {
             socketHandler.println(sensor.getStatus());
+        }
+        
+        else if (clientSentence.equals("GDATA"))
+        {
+            socketHandler.println(sensor.getData());
         }
         
         else

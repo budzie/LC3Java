@@ -7,20 +7,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import sockethandler.SocketHandler;
 import zybo_server.types.SensorType;
 
 public class SensorHandler
 {
-    private SerialHandler serialHandler;
+
+    private final SerialHandler serialHandler;
+    private final SocketHandler socketHandler;
     private final ArrayList<SensorType> sensors;
 
     private SampleHandler sample;
 
-    public SensorHandler(SerialHandler serialHandler) throws FileNotFoundException, IOException
+    public SensorHandler(SerialHandler serialHandler, SocketHandler socketHandler) throws FileNotFoundException, IOException
     {
         this.serialHandler = serialHandler;
+        this.socketHandler = socketHandler;
         sensors = new ArrayList<SensorType>();
-        
+
         BufferedReader in = new BufferedReader(new FileReader("Sensors.txt"));
 
         String line = in.readLine();
@@ -33,7 +37,7 @@ public class SensorHandler
             line = in.readLine();
         }
         in.close();
-        
+
     }
 
     private void addSensor(String sensorName, int sensorRate)
@@ -127,7 +131,7 @@ public class SensorHandler
         }
         if (!sensors.get(sensorNumber - 1).sensorName.isEmpty())
         {
-            sample = new SampleHandler(sensorNumber - 1, sensors.get(sensorNumber - 1).sensorName, sensors.get(sensorNumber - 1).sampleRate, serialHandler);
+            sample = new SampleHandler(sensorNumber - 1, sensors.get(sensorNumber - 1).sensorName, sensors.get(sensorNumber - 1).sampleRate, serialHandler, socketHandler);
             Thread sh = new Thread(sample, sensorNumber + "");
             sh.start();
 
@@ -163,36 +167,56 @@ public class SensorHandler
         System.out.println(answer);
         return answer;
     }
-    
-    
+
     public String status()
     {
         String answer = "";
         for (Thread t : Thread.getAllStackTraces().keySet())
         {
-            for (int i = 1; i < 6; i++)
+            for (int i = 1; i < 9; i++)
             {
                 if ((i + "").equals(t.getName()))
+                {
                     answer = answer + "Sensor " + t.getName() + " is active.";
+                }
             }
         }
         if (answer.isEmpty())
+        {
             answer = "No active sensors.";
+        }
         System.out.println(answer);
         return answer;
     }
-    
+
     public String getStatus()
     {
         String answer = "";
         for (Thread t : Thread.getAllStackTraces().keySet())
         {
-            for (int i = 1; i < 6; i++)
+            for (int i = 1; i < 9; i++)
             {
                 if ((i + "").equals(t.getName()))
+                {
                     answer = answer + t.getName();
+                }
             }
         }
         return answer;
+    }
+
+    public String getData() throws FileNotFoundException, IOException
+    {
+        BufferedReader in = new BufferedReader(new FileReader("/home/xilinx/ADCvalues.log"));
+        String output = "";
+        String line = in.readLine();
+        while (line != null)
+        {
+            output = output + line + "\n";
+            line = in.readLine();
+        }
+        in.close();
+        System.out.println(output);
+        return output;
     }
 }

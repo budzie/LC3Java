@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.DataInputStream;
 
 public class SerialHandler //implements SerialPortEventListener
 {
@@ -73,7 +74,7 @@ public class SerialHandler //implements SerialPortEventListener
         }
     }
 
-    public synchronized void close()
+    public void close()
     {
         if (serialPort != null)
         {
@@ -81,44 +82,31 @@ public class SerialHandler //implements SerialPortEventListener
             serialPort.close();
         }
     }
-
-    public String readLine() throws IOException
-    {
-        String inputLine = null;
-        while (true)
-        {
-            if (input.ready())
-            {
-                inputLine = input.readLine();
-                while (!inputLine.equals(null))
-                {
-                    return inputLine;
-                }
-            }
-        }
-    }
     
-      public synchronized int read() throws IOException
+      public int readUnsignedByte() throws IOException
     {
         int inputLine;
+        DataInputStream in = new DataInputStream(serialPort.getInputStream());
         while (true)
         {
             if (input.ready())
             {
-                inputLine = input.read();
-                if (inputLine > 0)
+                inputLine = in.readUnsignedByte();
+                if (inputLine > -1)
                 {
-                    int nl = input.read();
+                    int nl = in.readUnsignedByte();
                     if (nl == 10)
                     {
                        return inputLine; 
                     }              
                 }
+                //return 0;
             }
         }
     }
       
-      public synchronized String readString() throws IOException
+      
+      public String readString() throws IOException
     {
         int inputLine;
         String inputString = null;
@@ -127,7 +115,7 @@ public class SerialHandler //implements SerialPortEventListener
             if (input.ready())
             {
                 inputLine = input.read();
-                if (inputLine > 0)
+                if (inputLine > -1)
                 {
                     inputString = inputString + (inputLine + "0");
                     int nl = input.read();
@@ -141,7 +129,7 @@ public class SerialHandler //implements SerialPortEventListener
         }
     }
       
-    public synchronized void write(int outputByte)
+    public void write(int outputByte)
     {
         try
         {
@@ -153,23 +141,4 @@ public class SerialHandler //implements SerialPortEventListener
             ex.printStackTrace();
         }
     }
-
-    /*public synchronized void serialEvent(SerialPortEvent oEvent)
-     {
-     if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE)
-     {
-     try
-     {
-     if (input.ready())
-     {
-     inputLine = input.readLine();
-     System.out.println("Recieved: " + inputLine);
-     }
-     }
-     catch (Exception e)
-     {
-     System.err.println(e.toString());
-     }
-     }
-     }*/
 }

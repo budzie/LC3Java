@@ -5,6 +5,9 @@ import java.awt.Component;
 import java.awt.Graphics;
 import zybo_client.gui.handlers.TcpMenuHandler;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import zybo_client.gui.handlers.SensorStateHandler;
 
 public class JPanelTcpMenu extends javax.swing.JPanel
@@ -13,9 +16,11 @@ public class JPanelTcpMenu extends javax.swing.JPanel
     private final TcpMenuHandler handler;
     private SensorStateHandler ssHandler;
     private final boolean[] sensorStates;
+    private boolean checkButton;
 
     public JPanelTcpMenu(String ip) throws IOException, InterruptedException
     {
+        checkButton = false;
         initComponents();
         // Create TcpMenuHandler:
         handler = new TcpMenuHandler();
@@ -52,6 +57,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         jRadioButton8 = new javax.swing.JRadioButton();
         jRadioButton6 = new javax.swing.JRadioButton();
         jRadioButton7 = new javax.swing.JRadioButton();
+        GetLogButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setFocusable(false);
@@ -242,6 +248,17 @@ public class JPanelTcpMenu extends javax.swing.JPanel
             }
         });
 
+        GetLogButton.setText("Get Log");
+        GetLogButton.setToolTipText("Clear log file");
+        GetLogButton.setFocusable(false);
+        GetLogButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                GetLogButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -249,19 +266,24 @@ public class JPanelTcpMenu extends javax.swing.JPanel
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane1)
-                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jRadioButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jRadioButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(jRadioButton7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRadioButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jRadioButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRadioButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRadioButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jRadioButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jRadioButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jRadioButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jRadioButton7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jRadioButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jRadioButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadioButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadioButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadioButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(GetLogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(11, 11, 11))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(102, 102, 102)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -311,7 +333,8 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                         .addComponent(jRadioButton7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioButton8)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(GetLogButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(StartButton)
@@ -364,7 +387,9 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                 {
                     String data = handler.start(i);
                     if (!data.equals("null"))
+                    {
                         appendText("\n" + data);
+                    }
                 }
                 i++;
             }
@@ -390,21 +415,53 @@ public class JPanelTcpMenu extends javax.swing.JPanel
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton2ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton2ActionPerformed
         sensorStates[1] = !sensorStates[1];
+        if (sensorStates[1])
+        {
+            setButtonLockOn(jRadioButton2);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton3ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton3ActionPerformed
         sensorStates[2] = !sensorStates[2];
+        if (sensorStates[2])
+        {
+            setButtonLockOn(jRadioButton3);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton4ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton4ActionPerformed
         sensorStates[3] = !sensorStates[3];
+        if (sensorStates[3])
+        {
+            setButtonLockOn(jRadioButton4);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton5ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton5ActionPerformed
         sensorStates[4] = !sensorStates[4];
+        if (sensorStates[4])
+        {
+            setButtonLockOn(jRadioButton5);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton5ActionPerformed
 
     private void SensorPlusButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_SensorPlusButtonActionPerformed
@@ -419,7 +476,9 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                 {
                     String data = handler.incrSensor(i);
                     if (!data.equals("null"))
+                    {
                         appendText("\n" + data);
+                    }
                 }
                 i++;
             }
@@ -442,7 +501,9 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                 {
                     String data = handler.decrSensor(i);
                     if (!data.equals("null"))
-                        appendText("\n" + data);                                            
+                    {
+                        appendText("\n" + data);
+                    }
                 }
                 i++;
             }
@@ -456,6 +517,14 @@ public class JPanelTcpMenu extends javax.swing.JPanel
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton1ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton1ActionPerformed
         sensorStates[0] = !sensorStates[0];
+        if (sensorStates[0])
+        {
+            setButtonLockOn(jRadioButton1);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void StopButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_StopButtonActionPerformed
@@ -470,7 +539,9 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                 {
                     String data = handler.stop(i);
                     if (!data.equals("null"))
+                    {
                         appendText("\n" + data);
+                    }
                 }
                 i++;
             }
@@ -486,32 +557,63 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         try
         {
             appendText("\n" + handler.status());
-            paintStates(getGraphics());
         }
         catch (IOException ex)
         {
             setText("Connection to server lost. Please reconnect.");
-        }
-        catch (InterruptedException ex)
-        {
-            ex.printStackTrace();
         }
     }//GEN-LAST:event_StatusButtonActionPerformed
 
     private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton7ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton7ActionPerformed
         sensorStates[6] = !sensorStates[6];
+        if (sensorStates[6])
+        {
+            setButtonLockOn(jRadioButton7);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton7ActionPerformed
 
     private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton6ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton6ActionPerformed
         sensorStates[5] = !sensorStates[5];
+        if (sensorStates[5])
+        {
+            setButtonLockOn(jRadioButton6);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton6ActionPerformed
 
     private void jRadioButton8ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButton8ActionPerformed
     {//GEN-HEADEREND:event_jRadioButton8ActionPerformed
         sensorStates[7] = !sensorStates[7];
+        if (sensorStates[7])
+        {
+            setButtonLockOn(jRadioButton8);
+        }
+        else
+        {
+            setButtonLockOff();
+        }
     }//GEN-LAST:event_jRadioButton8ActionPerformed
+
+    private void GetLogButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_GetLogButtonActionPerformed
+    {//GEN-HEADEREND:event_GetLogButtonActionPerformed
+        try
+        {
+            appendText("\n" + handler.getData());
+        }
+        catch (IOException ex)
+        {
+            setText("Connection to server lost. Please reconnect.");
+        }
+    }//GEN-LAST:event_GetLogButtonActionPerformed
 
     public void setText(String in)
     {
@@ -528,6 +630,31 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         handler.disconnect();
     }
 
+    public void setButtonLockOff()
+    {
+        jRadioButton1.setEnabled(true);
+        jRadioButton2.setEnabled(true);
+        jRadioButton3.setEnabled(true);
+        jRadioButton4.setEnabled(true);
+        jRadioButton5.setEnabled(true);
+        jRadioButton6.setEnabled(true);
+        jRadioButton7.setEnabled(true);
+        jRadioButton8.setEnabled(true);
+    }
+
+    public void setButtonLockOn(Component button)
+    {
+        jRadioButton1.setEnabled(false);
+        jRadioButton2.setEnabled(false);
+        jRadioButton3.setEnabled(false);
+        jRadioButton4.setEnabled(false);
+        jRadioButton5.setEnabled(false);
+        jRadioButton6.setEnabled(false);
+        jRadioButton7.setEnabled(false);
+        jRadioButton8.setEnabled(false);
+        button.setEnabled(true);
+    }
+
     private void paintOval(Graphics g, Component c, Color f)
     {
         g.setColor(f);
@@ -536,7 +663,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         g.drawOval(c.getX() - 15, c.getY() + 6, 10, 10);
     }
 
-    public void paintStates(Graphics g) throws IOException, 
+    public void paintStates(Graphics g) throws IOException,
             InterruptedException
     {
         Component button = null;
@@ -545,9 +672,6 @@ public class JPanelTcpMenu extends javax.swing.JPanel
         {
             for (int i = 1; i < 9; i++)
             {
-                Color color = Color.RED;
-                if (states.contains(i + ""))
-                    color = Color.GREEN;
                 switch (i)
                 {
                     case 1:
@@ -566,21 +690,33 @@ public class JPanelTcpMenu extends javax.swing.JPanel
                         button = jRadioButton5;
                         break;
                     case 6:
-                        button = jRadioButton8;
-                        break;   
-                    case 7:
                         button = jRadioButton6;
                         break;
-                    case 8:
+                    case 7:
                         button = jRadioButton7;
-                        break;                        
+                        break;
+                    case 8:
+                        button = jRadioButton8;
+                        break;
                 }
+                Color color = Color.RED;
+                if (states.contains(i + ""))
+                {
+                    color = Color.GREEN;
+                }
+                if (checkButton)
+                {
+                    checkButton = false;
+                    setButtonLockOff();
+                }
+
                 paintOval(g, button, color);
                 repaint();
+
             }
         }
     }
-    
+
     @Override
     public void paintComponent(Graphics g)
     {
@@ -602,6 +738,7 @@ public class JPanelTcpMenu extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DeleteButton;
     private javax.swing.JButton ExitButton;
+    private javax.swing.JButton GetLogButton;
     private javax.swing.JButton ListButton;
     private javax.swing.JButton SensorMinusButton;
     private javax.swing.JButton SensorPlusButton;
